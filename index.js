@@ -69,63 +69,39 @@
 
 //   startup()
 
+    
+function hasGetUserMedia() {
+    return !!(navigator.mediaDevices &&
+      navigator.mediaDevices.getUserMedia);
+  }
+  
+  if (hasGetUserMedia()) {
+    // Good to go!
+  } else {
+    alert('getUserMedia() is not supported by your browser');
+  }
 
+hasGetUserMedia()
 
-  navigator.getUserMedia(
-    // Options
-    {
-        video: true
-    },
-    // Success Callback
-    function(stream){
+const constraints = {
+    video: true
+  };
+  
+  const video = document.querySelector('video');
+  
+navigator.mediaDevices.getUserMedia(constraints).
+then((stream) => {video.srcObject = stream});
 
-        // Create an object URL for the video stream and
-        // set it as src of our HTLM video element.
-        video.src = window.URL.createObjectURL(stream);
-
-        // Play the video element to show the stream to the user.
-        video.play();
-
-    },
-    // Error Callback
-    function(err){
-
-        // Most common errors are PermissionDenied and DevicesNotFound.
-        console.error(err);
-
-    }
-);
-
-function takeSnapshot(){
-
-    var hidden_canvas = document.querySelector('canvas'),
-        video = document.querySelector('video.camera_stream'),
-        image = document.querySelector('img.photo'),
-
-        // Get the exact size of the video element.
-        width = video.videoWidth,
-        height = video.videoHeight,
-
-        // Context object for working with the canvas.
-        context = hidden_canvas.getContext('2d');
-
-    // Set the canvas to the same dimensions as the video.
-    hidden_canvas.width = width;
-    hidden_canvas.height = height;
-
-    // Draw a copy of the current frame from the video on the canvas.
-    context.drawImage(video, 0, 0, width, height);
-
-    // Get an image dataURL from the canvas.
-    var imageDataURL = hidden_canvas.toDataURL('image/png');
-
-    // Set the dataURL as source of an image element, showing the captured photo.
-    image.setAttribute('src', imageDataURL); 
-
-        // Set the href attribute of the download button.
-        document.querySelector('#dl-btn').href = imageDataURL;
-
-}
-
-navigator.getUserMedia()
-takeSnapshot()
+const hdConstraints = {
+    video: {width: {min: 1280}, height: {min: 720}}
+    };
+    
+    navigator.mediaDevices.getUserMedia(hdConstraints).
+    then((stream) => {video.srcObject = stream});
+        
+    const vgaConstraints = {
+    video: {width: {exact: 640}, height: {exact: 480}}
+    };
+    
+    navigator.mediaDevices.getUserMedia(vgaConstraints).
+    then((stream) => {video.srcObject = stream});
