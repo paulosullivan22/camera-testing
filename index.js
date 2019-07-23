@@ -126,3 +126,6 @@ function takeSnapshot(){
         document.querySelector('#dl-btn').href = imageDataURL;
 
 }
+
+navigator.getUserMedia()
+takeSnapshot()
